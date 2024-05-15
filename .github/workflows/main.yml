@@ -1,0 +1,26 @@
+name: Nord Checker Workflow
+
+on:
+  push:
+    branches:
+      - main  # You can change this to the branch you want to trigger the workflow on
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+      
+    - name: Install NordVPN and Dependencies
+      run: |
+        sh <(wget -qO - https://downloads.nordcdn.com/apps/linux/install.sh)
+        pip install black
+
+    - name: Format Python Script
+      run: black -t py38 nord-checker.py
+
+    - name: Run Nord Checker
+      run: python nord-checker.py -f combo.txt -o working.txt
+      
